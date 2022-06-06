@@ -1,0 +1,29 @@
+## a simple deployment with a container-level GMSA cred spec
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .TestName }}
+  name: {{ .TestName }}
+  namespace: {{ .Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .TestName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .TestName }}
+    spec:
+      serviceAccountName: {{ .ServiceAccountName }}
+      containers:
+      - image: k8s.gcr.io/pause
+        name: nginx
+        securityContext:
+          windowsOptions:
+            gmsaCredentialSpecName: {{ index .CredSpecNames 0 }}
+{{- range $line := .ExtraSpecLines }}
+      {{ $line }}
+{{- end }}

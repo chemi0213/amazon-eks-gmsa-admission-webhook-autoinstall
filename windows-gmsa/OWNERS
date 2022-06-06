@@ -1,0 +1,13 @@
+# See the OWNERS docs: https:/go.k8s.io/owners
+
+approvers:
+  - jayunit100
+  - jsturtevant
+  - marosset
+
+emeritus_approvers:
+  - ddebroy
+  - wk8
+
+labels:
+  - sig/windows

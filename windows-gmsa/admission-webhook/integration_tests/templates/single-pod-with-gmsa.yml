@@ -1,0 +1,29 @@
+## this deploys a single pod with a pod-level GMSA cred spec
+
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: {{ .TestName }}
+  name: {{ .TestName }}
+  namespace: {{ .Namespace }}
+spec:
+  serviceAccountName: {{ .ServiceAccountName }}
+  securityContext:
+    windowsOptions:
+      gmsaCredentialSpecName: {{ index .CredSpecNames 0 }}
+{{- if .CredSpecContent }}
+      gmsaCredentialSpec: '{{ .CredSpecContent }}'
+{{- end }}
+  containers:
+  - name: nginx
+{{- if .Image }}
+    image: {{ .Image }}
+{{- else }}
+    image: k8s.gcr.io/pause
+{{- end }}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Never
+{{- range $line := .ExtraSpecLines }}
+  {{ $line }}
+{{- end }}
